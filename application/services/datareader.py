@@ -1,4 +1,3 @@
-import pymonetdb
 from nameko.rpc import rpc
 
 from application.dependencies.monetdb import MonetDbConnection
@@ -13,14 +12,10 @@ class DatareaderService(object):
     def select(self, query, parameters=None):
         cursor = self.connection.cursor()
 
-        try:
-            if parameters is None:
-                cursor.execute(query)
-            else:
-                cursor.execute(query, parameters)
-        except pymonetdb.exceptions.Error:
-            self.connection.rollback()
-            raise
+        if parameters is None:
+            cursor.execute(query)
+        else:
+            cursor.execute(query, parameters)
 
         meta = [r[0] for r in cursor.description]
 
