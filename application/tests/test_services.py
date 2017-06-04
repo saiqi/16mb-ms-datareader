@@ -2,6 +2,7 @@ import pytest
 import pymonetdb
 
 from nameko.testing.services import worker_factory
+import bson.json_util
 
 from application.services.datareader import DatareaderService
 
@@ -21,13 +22,7 @@ def connection(host, user, password, database, port):
 
         for table in cursor.fetchall():
             has_cleaned = True
-            try:
-                _conn.execute('DROP TABLE {table}'.format(table=table[0]))
-                _conn.commit()
-            except pymonetdb.exceptions.Error:
-                _conn.rollback()
-                continue
-
+            _conn.execute('DROP TABLE {table}'.format(table=table[0]))
         return has_cleaned
 
     max_retry = 2
@@ -45,13 +40,13 @@ def test_select(connection):
     connection.execute('CREATE TABLE T_TEST AS SELECT 1 AS ID UNION ALL SELECT 2 AS ID')
 
     service = worker_factory(DatareaderService, connection=connection)
-    res = service.select('SELECT * FROM T_TEST ORDER BY ID')
+    res = bson.json_util.loads(service.select('SELECT * FROM T_TEST ORDER BY ID'))
 
     assert len(res) == 2
     assert 'id' in res[0]
     assert res[0]['id'] == 1
 
-    res = service.select('SELECT * FROM T_TEST WHERE ID = %s', [1])
+    res = bson.json_util.loads(service.select('SELECT * FROM T_TEST WHERE ID = %s', [1]))
 
     assert len(res) == 1
     assert 'id' in res[0]

@@ -1,4 +1,5 @@
 from nameko.rpc import rpc
+import bson.json_util
 
 from application.dependencies.monetdb import MonetDbConnection
 
@@ -28,4 +29,4 @@ class DatareaderService(object):
 
         cursor.close()
 
-        return results
+        return bson.json_util.dumps(results)
