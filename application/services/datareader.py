@@ -10,7 +10,7 @@ class DatareaderService(object):
     connection = MonetDbConnection()
 
     @rpc
-    def select(self, query, parameters=None):
+    def select(self, query, parameters=None, fetchone=False):
         cursor = self.connection.cursor()
 
         if parameters is None:
@@ -20,12 +20,16 @@ class DatareaderService(object):
 
         meta = [r[0] for r in cursor.description]
 
-        raw_data = cursor.fetchall()
+        if fetchone:
+            raw_data = cursor.fetchone()
+            results = dict(zip(meta, raw_data))
+        else:
+            raw_data = cursor.fetchall()
 
-        results = list()
+            results = list()
 
-        for r in raw_data:
-            results.append(dict(zip(meta, r)))
+            for r in raw_data:
+                results.append(dict(zip(meta, r)))
 
         cursor.close()
 
