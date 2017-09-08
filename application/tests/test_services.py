@@ -57,3 +57,7 @@ def test_select(connection):
     assert type(res) == dict
     assert 'id' in res
     assert res['id'] == 1
+
+    res = bson.json_util.loads(service.select('SELECT * FROM T_TEST', limit=1))
+
+    assert len(res) == 1

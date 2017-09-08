@@ -10,13 +10,15 @@ class DatareaderService(object):
     connection = MonetDbConnection()
 
     @rpc
-    def select(self, query, parameters=None, fetchone=False):
+    def select(self, query, parameters=None, fetchone=False, limit=50):
         cursor = self.connection.cursor()
 
+        performed_query = '{} LIMIT {}'.format(query, limit)
+
         if parameters is None:
-            cursor.execute(query)
+            cursor.execute(performed_query)
         else:
-            cursor.execute(query, parameters)
+            cursor.execute(performed_query, parameters)
 
         meta = [r[0] for r in cursor.description]
 
