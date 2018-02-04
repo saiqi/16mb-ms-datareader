@@ -23,7 +23,7 @@ class DatareaderService(object):
         else:
             cursor.execute(performed_query, parameters)
 
-        result = None
+        results = None
         if cursor.description:
             meta = [r[0] for r in cursor.description]
 
