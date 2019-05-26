@@ -1,8 +1,21 @@
+import logging
+
 from nameko.rpc import rpc
 import bson.json_util
 
 from application.dependencies.monetdb import MonetDbConnection
+from nameko.dependency_providers import DependencyProvider
 
+_log = logging.getLogger(__name__)
+
+class ErrorHandler(DependencyProvider):
+
+    def worker_result(self, worker_ctx, res, exc_info):
+        if exc_info is None:
+            return
+
+        exc_type, exc, tb = exc_info
+        _log.error(str(exc))
 
 class DatareaderService(object):
     name = 'datareader'
