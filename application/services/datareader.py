@@ -19,7 +19,7 @@ class ErrorHandler(DependencyProvider):
 
 class DatareaderService(object):
     name = 'datareader'
-
+    error = ErrorHandler()
     connection = MonetDbConnection()
 
     @rpc
