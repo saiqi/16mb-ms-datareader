@@ -18,7 +18,7 @@ class DummyService(object):
     def insert(self):
         cursor = self.connection.cursor()
 
-        cursor.execute('INSERT INTO TEST_TABLE (ID) VALUES (1)');
+        cursor.execute('INSERT INTO TEST_TABLE (ID) VALUES (1)')
 
     @dummy
     def select(self):
@@ -38,13 +38,13 @@ class DummyService(object):
 
 
 @pytest.fixture
-def config(host, user, password, database, port):
+def config():
     return {
-        'MONETDB_USER': user,
-        'MONETDB_PASSWORD': password,
-        'MONETDB_HOST': host,
-        'MONETDB_DATABASE': database,
-        'MONETDB_PORT': port,
+        'MONETDB_USER': 'monetdb',
+        'MONETDB_PASSWORD': 'monetdb',
+        'MONETDB_HOST': 'localhost',
+        'MONETDB_DATABASE': 'db',
+        'MONETDB_PORT': '50000',
         'max_workers': 2
     }
 

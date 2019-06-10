@@ -23,6 +23,13 @@ class DatareaderService(object):
     connection = MonetDbConnection()
 
     @rpc
+    def get_tables(self):
+        query = """
+        SELECT NAME FROM SYS.TABLES WHERE NOT SYSTEM
+        """
+        return self.select(query, limit=-1)
+
+    @rpc
     def select(self, query, parameters=None, fetchone=False, limit=50):
         cursor = self.connection.cursor()
 
