@@ -40,9 +40,8 @@ class MonetDbConnection(DependencyProvider):
 
         try:
             connection.execute('SELECT 1')
-        except pymonetdb.exceptions.OperationalError:
+        except (pymonetdb.exceptions.Error, ConnectionResetError):
             connection = self._get_connection()
-            pass
 
         self.connections[worker_ctx] = connection
 
